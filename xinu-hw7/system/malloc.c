@@ -2,6 +2,7 @@
  * @file malloc.c
  * @provides malloc                                                       
  *
+ * Modified by: Casey O'Hare & Sam Ostlund
  * COSC 3250 / COEN 4820 malloc project.
  */
 /* Embedded XINU, Copyright (C) 2009.  All rights reserved. */

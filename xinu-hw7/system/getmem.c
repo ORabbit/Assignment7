@@ -3,6 +3,7 @@
  * @provides getmem                                                       
  *
  * COSC 3250 / COEN 4820 malloc project.
+ * Modified by: Casey O'Hare & Sam Ostlund
  */
 /* Embedded XINU, Copyright (C) 2009.  All rights reserved. */
 
