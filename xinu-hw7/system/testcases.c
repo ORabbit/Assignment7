@@ -10,13 +10,15 @@
  */
 /* Embedded XINU, Copyright (C) 2010, 2014.  All rights reserved. */
 
-#include <mutex.h>
+/*#include <mutex.h>
 #include <kernel.h>
 #include <device.h>
 #include <stdio.h>
 #include <uart.h>
 #include <proc.h>
 #include <semaphore.h>
+*/
+#include <xinu.h>
 	
 ulong rand(void)
 {
@@ -235,12 +237,35 @@ struct boundedbuffer createbuffer(void)
 	return bbuff;
 }
 
+
+void printfreelist(void)
+{
+	memblk *memBlock = &freelist;
+	int count = 0;
+	kprintf("-----------------------------------------\r\n");
+	kprintf("|Count\t|Block\t\t|Length\t\t|\r\n");
+	while(memBlock != NULL)
+	{
+		kprintf("|%d\t|%u\t|%u\t|\r\n", count, &memBlock, memBlock->length);
+		memBlock = memBlock->next;
+		count++;
+	}
+	kprintf("-----------------------------------------\r\n");
+	
+}
+
 /**
  * testcases - called after initialization completes to test things.
  */
 void testcases(void)
 {
-	int c, i;
+	kprintf("===TEST BEGIN===\r\n");
+	
+	printfreelist();
+	
+	kprintf("===TEST END===\r\n");
+}
+/*	int c, i;
 	struct boundedbuffer bbuff;
 	struct boundedbuffer bbuff2;
 	
@@ -456,5 +481,5 @@ void testcases(void)
 	while (numproc > 2) { resched(); }
 	kprintf("\r\n===TEST END===\r\n");
 	return;
-}
+}*/
 
