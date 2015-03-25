@@ -27,18 +27,39 @@ syscall	freemem(void *pmem, ulong nbytes)
 
 	int found = FALSE;
 	memblk *memBlock = freelist.next;
+	memblk *memPrev = &freelist;
+
+	// Check for 0 == nbytes; return SYSERR
+	// Maybe check to make sure it stays within bounds...
+
 	while(found && memBlock != NULL)
 	{
-		if((ulong) memBlock->next > (ulong) pmem)
+		if((ulong) memBlock > (ulong) pmem)
 			found = TRUE;
 		else
-			memBlock = memBlock->next;
+			{
+				memPrev = memBlock;
+				memBlock = memBlock->next;
+			}
 	}
 	
 	memblk *pmemBlock = (memblk *) pmem;
-	pmemBlock->next = memBlock->next;
+	pmemBlock->next = memBlock;
 	pmemBlock->length = (ulong) roundmb(nbytes);
-	memBlock->next = pmemBlock;
+	memPrev->next = pmemBlock;
+	freelist.length += nbytes;
+
+	// Compaction... Comment out to have output more detailed
+	if(pmemBlock - memPrev == 1)
+	{
+		memPrev->next = memBlock;
+		memPrev->length += pmemBlock->length;
+	}
+	if(memBlock - pmemBlock == 1)
+	{
+		pmemBlock->next = memBlock->next;
+		pmemBlock->length += memBlock->length;
+	}
 
 	return OK;
 
