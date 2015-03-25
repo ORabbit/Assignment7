@@ -12,6 +12,8 @@
 #include <stdarg.h>
 #include <mips.h>
 #include <string.h>
+#include <memory.h>
+//#include "getmem.c" // WHY???
 
 local newpid(void);
 void userret(void);
@@ -40,7 +42,7 @@ syscall	create(void *procaddr, ulong ssize, ulong priority,
 	if (ssize < MINSTK) ssize = MINSTK;
 	ssize = (ulong)(ssize + 3) & 0xFFFFFFFC;  
                                     /* round up to even boundary    */
-	saddr = (ulong *)getstk(ssize); /* allocate new stack and pid   */
+	saddr = (ulong *) getmem(ssize);//(ulong *)getstk(ssize); /* allocate new stack and pid   */
 	pid   = newpid();
 	                                /* a little error checking      */ 
 	if ( (((ulong *)SYSERR) == saddr) || (SYSERR == pid) )

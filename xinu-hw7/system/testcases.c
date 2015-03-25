@@ -18,7 +18,10 @@
 #include <proc.h>
 #include <semaphore.h>
 */
+//#include "getmem.c"
 #include <xinu.h>
+//#include "getmem.c"
+//#include "freemem.c"
 	
 ulong rand(void)
 {
@@ -261,6 +264,11 @@ void testcases(void)
 {
 	kprintf("===TEST BEGIN===\r\n");
 	
+	printfreelist();
+	//kprintf("%u: region start\r\n", (ulong) getmem(1000));
+	//freemem((void *) 10000000, 10000);
+	printfreelist();
+	//freemem((void *) 10000000, 10000);
 	printfreelist();
 	
 	kprintf("===TEST END===\r\n");

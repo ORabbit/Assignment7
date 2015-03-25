@@ -18,6 +18,14 @@
 syscall	freemem(void *pmem, ulong nbytes)
 {
 	// TODO: Insert back into free list, and compact with adjacent blocks.
+	// Simplly Adds to front for now
+	/*memblk *temp = freelist.next;
+	memblk *newMem = &((memblk *) pmem);
+	newMem->next = temp->next;
+	newMem->length = nbytes;
+	freelist.next = &newMem;*/
+
+	return OK;
 
 	return SYSERR;
 }

@@ -25,7 +25,8 @@ LDRS = start.S flushcache.S
 SYS = kprintf.c xtrap.c testcases.c main.c queue.c create.c ready.c \
 	resched.c getstk.c kill.c \
 	prioritize.c clockinit.c clockintr.c \
-	semcreate.c semfree.c wait.c signal.c semcount.c mutex.c
+	semcreate.c semfree.c wait.c signal.c semcount.c mutex.c \
+	getmem.c freemem.c malloc.c free.c
 
 SYSS = startup.S irq.S ctxsw.S \
 	clockup.S interrupt.S \
