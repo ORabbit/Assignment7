@@ -247,9 +247,10 @@ void printfreelist(void)
 	int count = 0;
 	kprintf("-----------------------------------------\r\n");
 	kprintf("|Count\t|Block\t\t|Length\t\t|\r\n");
+	//kprintf("|%d\t|%u\t|%u\t|\r\n", count, memBlock, memBlock->length); // First item
 	while(memBlock != NULL)
 	{
-		kprintf("|%d\t|%u\t|%u\t|\r\n", count, &memBlock, memBlock->length);
+		kprintf("|%d\t|0x%08X\t|%u\t|\r\n", count, memBlock, memBlock->length);
 		memBlock = memBlock->next;
 		count++;
 	}
@@ -257,7 +258,7 @@ void printfreelist(void)
 	
 }
 
-/**
+/*
  * testcases - called after initialization completes to test things.
  */
 void testcases(void)
@@ -265,10 +266,12 @@ void testcases(void)
 	kprintf("===TEST BEGIN===\r\n");
 	
 	printfreelist();
-	//kprintf("%u: region start\r\n", (ulong) getmem(1000));
+	void *region =  getmem(4096);
+	kprintf("0x%08X: region start\r\n", (ulong) region);
 	//freemem((void *) 10000000, 10000);
 	printfreelist();
-	//freemem((void *) 10000000, 10000);
+	freemem(region, 4096);
+	kprintf("Called freemem(region, 4096)\r\n");
 	printfreelist();
 	
 	kprintf("===TEST END===\r\n");
