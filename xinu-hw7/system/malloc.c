@@ -23,5 +23,16 @@ void *malloc(ulong nbytes)
 	//         of request.  Return pointer to space above accounting
 	//         block.
 
-	return (void *)SYSERR;
+	memblk *region;
+
+	nbytes += sizeof(memblk); // Attempting to pad for accounting info (Stkbase, Stklength)
+	region = (memblk *) getmem(nbytes);
+
+	if((ulong *)region == (ulong *)SYSERR)
+		return (void *)SYSERR;
+
+	region->next = region;
+	region->length = nbytes;
+
+	return (void *) (region + 1);
 }

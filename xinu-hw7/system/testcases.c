@@ -265,6 +265,7 @@ void testcases(void)
 {
 	kprintf("===TEST BEGIN===\r\n");
 	
+	/*	
 	printfreelist();
 	void *region =  getmem(4096);
 	kprintf("0x%08X: region start\r\n", (ulong) region);
@@ -274,6 +275,40 @@ void testcases(void)
 	kprintf("Called freemem(region, 4096)\r\n");
 	printfreelist();
 	
+	kprintf("Called malloc(4096)\r\n");
+	void *temp = malloc(4096);
+	printfreelist();
+
+	kprintf("Called free(0x%08X)\r\n", (ulong)temp);
+	int flag = free(temp);
+	if(flag == SYSERR)
+		kprintf("ERROR\r\n");
+	printfreelist();
+
+	ready(create((void *)printfreelist, INITSTK, 1, "STUFF", 0), 0);
+	resched();
+	ready(create((void *)printfreelist, INITSTK, 1, "STUFF", 0), 0);
+	resched();
+	kprintf("worked\r\n");
+	*/
+
+	//***** compactbelow ******
+	void *getmem1 = getmem(4096);
+	kprintf("getmem(4096) 0x%08X\r\n", (ulong) getmem1); 
+	void *getmem2 = getmem(4096);
+	kprintf("getmem(4096) 0x%08X\r\n", (ulong) getmem2);
+	void *getmem3 = getmem(4096);
+	kprintf("getmem(4096) 0x%08X\r\n", (ulong) getmem3);
+	void *getmem4 = getmem(4096);
+	kprintf("getmem(4096) 0x%08X\r\n", (ulong) getmem4);
+	printfreelist();
+	freemem(getmem2, 4096);
+	kprintf("freemem(4096) - getmem2\r\n");
+	freemem(getmem3, 4096);
+	kprintf("freemem(4096) - getmem3\r\n");
+	printfreelist();
+
+
 	kprintf("===TEST END===\r\n");
 }
 /*	int c, i;

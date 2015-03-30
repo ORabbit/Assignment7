@@ -7,9 +7,7 @@
 
 /* Embedded XINU, Copyright (C) 2008.  All rights reserved. */
 
-#include <kernel.h>
-#include <proc.h>
-#include <queue.h>
+#include <xinu.h>
 
 /*
  * kill  --  kill a process and remove it from the system
@@ -31,6 +29,8 @@ syscall	kill(int pid)
 
 	--numproc;
 
+	freemem(ppcb->stkbase, ppcb->stklen);
+
 	switch (ppcb->state)
 	{
 	case PRCURR:
@@ -43,7 +43,7 @@ syscall	kill(int pid)
 	default:
 		ppcb->state = PRFREE;
 	}
-
+	
 	restore(im);
 	return OK;
 }

@@ -21,7 +21,9 @@ void *getmem(ulong nbytes)
 	//       to new memory region, and add any remaining chunk
 	//       back into the free list.
 
-	// Add SYSERR for 0 bytes
+	// SYSERR for 0 bytes
+	if(nbytes == 0)
+		return (void *)SYSERR;
 
 	// Search free list for first chunk large enough to fit.
 	memblk *memBlock = freelist.next;
@@ -29,13 +31,13 @@ void *getmem(ulong nbytes)
 	memblk *extra;
 	//memPrev->next = freelist.next;
 	//memPrev->length = freelist.length;
-	kprintf("Start memBlock=%u\r\n", (ulong)memBlock);
-	kprintf("%d\r\n", nbytes);
+//	kprintf("Start memBlock=%u\r\n", (ulong)memBlock);
+//	kprintf("%d\r\n", nbytes);
 	nbytes = (ulong) roundmb(nbytes);
 
 	while(memBlock != NULL)
 	{
-		kprintf("memBlock=%u & memBlock->length=%u", (ulong)memBlock, memBlock->length);
+//		kprintf("memBlock=%u & memBlock->length=%u\r\n", (ulong)memBlock, memBlock->length);
 		if(memBlock->length == nbytes)
 		{
 			memPrev->next = memBlock->next;
@@ -50,7 +52,7 @@ void *getmem(ulong nbytes)
 			extra->length = memBlock->length - nbytes;
 			freelist.length -= nbytes;
 
-			return (void *) --extra;//memBlock;
+			return (void *) memBlock;//--extra;//memBlock;//--extra; this works
 		}
 		memPrev = memBlock;
 		memBlock = memBlock->next;

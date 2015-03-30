@@ -30,17 +30,19 @@ syscall	freemem(void *pmem, ulong nbytes)
 	memblk *memPrev = &freelist;
 
 	// Check for 0 == nbytes; return SYSERR
+	if(nbytes == 0)
+		return SYSERR;
 	// Maybe check to make sure it stays within bounds...
 
-	while(found && memBlock != NULL)
+	while(!found && memBlock != NULL)
 	{
 		if((ulong) memBlock > (ulong) pmem)
 			found = TRUE;
 		else
-			{
-				memPrev = memBlock;
-				memBlock = memBlock->next;
-			}
+		{
+			memPrev = memBlock;
+			memBlock = memBlock->next;
+		}
 	}
 	
 	memblk *pmemBlock = (memblk *) pmem;
@@ -50,18 +52,19 @@ syscall	freemem(void *pmem, ulong nbytes)
 	freelist.length += nbytes;
 
 	// Compaction... Comment out to have output more detailed
-	if(pmemBlock - memPrev == 1)
+//kprintf("memPrev:0x%08X\tmemPrev->length:%u\r\n", (ulong)memPrev, memPrev->length);
+//kprintf("pmemBlock:%08X\tpmemBlock->length:%u\r\n", (ulong)pmemBlock, pmemBlock->length);
+//kprintf("memBlcock:%08X\tmemBlock->length:%u\r\n", (ulong)memBlock, memBlock->length);
+	if(((ulong)memPrev + memPrev->length) == (ulong)pmemBlock)
 	{
 		memPrev->next = memBlock;
 		memPrev->length += pmemBlock->length;
 	}
-	if(memBlock - pmemBlock == 1)
+	if(((ulong)pmemBlock + pmemBlock->length) == (ulong)memBlock)
 	{
 		pmemBlock->next = memBlock->next;
 		pmemBlock->length += memBlock->length;
 	}
 
 	return OK;
-
-	return SYSERR;
 }
